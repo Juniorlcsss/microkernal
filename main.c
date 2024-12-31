@@ -39,7 +39,7 @@ int process_builder(const char* name, int priority, int burstTime, int arrivalTi
     else{
         Process* newProcess = (Process*)malloc(sizeof(Process));
         newProcess->id = processCount + 1;
-        strcpy(newProcess->name, name, sizeof(newProcess->name));
+        strncpy(newProcess->name, name, sizeof(newProcess->name));
         newProcess->name[sizeof(newProcess->name) -1] = '\0';
         newProcess->priority = priority;
         newProcess->burstTime = burstTime;
