@@ -6,6 +6,12 @@
 #define MAX_PROCESSES 10
 
 //structs
+typedef enum{
+    READY = 0,
+    RUNNING = 1,
+    BLOCKED = 2,
+} processState;
+
 typedef struct{
     int id;
     char name[20];
@@ -16,7 +22,7 @@ typedef struct{
     int completionTime;
     int turnaroundTime;
     int waitingTime;
-    int state; // 0 - ready, 1 - running, 2 - blocked
+    int state;
     int priorityQueueIndex;
     int waitingQueueIndex;
 } Process;
@@ -25,7 +31,7 @@ Process* process_table[MAX_PROCESSES];
 int processCount = 0;
 
 //Create a new process
-int process_builder(const char* name){
+int process_builder(const char* name, int priority, int burstTime, int arrivalTime){
     if(processCount >= MAX_PROCESSES){
         //process table is full
         return -1;
@@ -35,14 +41,13 @@ int process_builder(const char* name){
         newProcess->id = processCount + 1;
         strcpy(newProcess->name, name, sizeof(newProcess->name));
         newProcess->name[sizeof(newProcess->name) -1] = '\0';
-        newProcess->priority = 0;
-        newProcess->burstTime = 0;
-        newProcess->arrivalTime = 0;
-        newProcess->remainingTime = 0;
+        newProcess->priority = priority;
+        newProcess->burstTime = burstTime;
+        newProcess->arrivalTime = arrivalTime;
         newProcess->completionTime = 0;
         newProcess->turnaroundTime = 0;
         newProcess->waitingTime = 0;
-        newProcess->state = 0; //ready
+        newProcess->state = READY;
         newProcess->priorityQueueIndex = -1;
         newProcess->waitingQueueIndex = -1;
 
@@ -63,8 +68,9 @@ void process_list(){
 //main
 int main(){
     //create processes
-    process_builder("Process1");
-    process_builder("Process2");
+    //Name, priority, burst time, arrival time
+    process_builder("Process1", 1, 5, 0);
+    process_builder("Process2", 2, 3, 2);
 
     process_list();
 
